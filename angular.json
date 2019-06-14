@@ -24,7 +24,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/globalFab.css",
+              "src/assets/css/tooltip.css",
+              "src/assets/css/errorMessages.css",
+              "src/assets/css/newEmail.css"
             ],
             "scripts": []
           },
@@ -112,6 +116,15 @@
             "production": {
               "devServerTarget": "cmail:serve:production"
             }
+          }
+        },
+        "schematics":{
+          "@schematics/angular:component":{
+            "prefix": "cmail",
+            "inlineStyle":true
+          },
+          "schematics/angular:directive":{
+            "prefix":"cmail"
           }
         }
       }
