@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { EmailService } from '../../services/email.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PageDataService } from '../../services/page.service';
+import { HeaderDataService } from '../../services/header.service';
 
 @Component({
   selector: 'cmail-caixa-de-entrada',
@@ -25,9 +27,12 @@ export class CaixaDeEntradaComponent {
     conteudo: ''
   }
 
+  termoParaFiltro = '';
+
   mensagemErroLista = '';
 
-  constructor(private emailService: EmailService){}
+  constructor(private emailService: EmailService, private pageDataService: PageDataService
+              ,private headerService:HeaderDataService ){}
 
   ngOnInit(){
     this.emailService.listar()
@@ -40,6 +45,8 @@ export class CaixaDeEntradaComponent {
                           this.mensagemErroLista = responseError.error
                         }
                       )
+    this.pageDataService.defineTitulo('CMail - Caixa de entrada')
+    this.headerService.valorDoFiltro.subscribe(novoValor => this.termoParaFiltro = novoValor);
   }
   
 
@@ -65,6 +72,30 @@ export class CaixaDeEntradaComponent {
         }
         ,erro => console.error(erro)
       )
+  }
+
+  handleRemoveEmail(eventoVaiRemover, emailId){
+    console.log('cliqcou');
+    if(eventoVaiRemover.status === 'removing'){
+      this.emailService
+          .deletar(emailId)
+          .subscribe(
+            res => {
+              console.log(res);
+              this.emailList = this.emailList.filter(email=>email.id != emailId);
+            }
+            ,err => console.error(err)
+          )
+    }
+  }
+
+  filtrarEmailsPorAssunto(){
+    const termoParaFiltroMinusculo = this.termoParaFiltro.toLowerCase();
+
+    return this.emailList.filter( email => {
+      const assunto = email.assunto.toLowerCase()
+      return assunto.includes(termoParaFiltroMinusculo)
+    })
   }
 
 }

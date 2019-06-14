@@ -14,6 +14,11 @@ export class EmailService{
 
     constructor(private httpClient: HttpClient){}
 
+    deletar(id){
+        return this.httpClient.delete(`
+                    ${this.api}/${id}`, {headers:this.cabecalho})
+    }
+
     listar(){
         return this.httpClient
                     .get(this.api, {headers:this.cabecalho})
@@ -26,7 +31,8 @@ export class EmailService{
                                                 destinatario:emailApi.to,
                                                 assunto:emailApi.subject,
                                                 conteudo:emailApi.content,
-                                                dataDeEnvio:emailApi.created_at
+                                                dataDeEnvio:emailApi.created_at,
+                                                id:emailApi.id
                                             })
                                         )
                             }
@@ -49,7 +55,8 @@ export class EmailService{
                                     destinatario: emailParaApi.to,
                                     assunto: emailParaApi.subject,
                                     conteudo: emailParaApi.content,
-                                    dataDeEnvio: emailParaApi.created_at
+                                    dataDeEnvio: emailParaApi.created_at,
+                                    id:emailParaApi.id
                                 })
                             }
                         )
